@@ -28,7 +28,7 @@ RSpec.describe "ApiDevelopments", type: :request do
   describe "MongoDB-backend" do
     before(:each) do
       State.delete_all
-      @object = State.create(:name => "Pindi")
+      @object = State.create(:name => "Punjab")
     end
     after(:each) { State.delete_all }
 
