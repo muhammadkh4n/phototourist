@@ -34,7 +34,7 @@ var bowerPath = "bower_components";
 
 var cfg = {
   // source code src globs and build paths
-  root_Html: { src: srcPath + "/index.html", bld: buildPath },
+  root_html: { src: srcPath + "/index.html", bld: buildPath },
   css:       { src: srcPath + "/stylesheets/**/*.css", bld: buildPath + "/stylesheets" },
   js:        { src: srcPath + "/javascripts/**/*.js" },
   html:      { src: [srcPath + "/**/*.html", "!"+srcPath + "/*.html"] },
@@ -141,7 +141,7 @@ function browserSyncInit(baseDir, watchFiles) {
 // run browser against the development/build area and watch files being edited
 gulp.task("browserSync", ["build"], function () {
   browserSyncInit(devResourcePath, [
-    cfg.root_Html.src,
+    cfg.root_html.src,
     cfg.css.bld + "/**/*.css",
     cfg.js.src,
     cfg.html.src,
