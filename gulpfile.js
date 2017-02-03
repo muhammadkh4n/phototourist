@@ -73,3 +73,58 @@ var devResourcePath = [
   srcPath+"/javascripts",
   srcPath+"/stylesheets"
 ];
+
+// remove build directory and files inside it.
+gulp.task("clean:build", function () {
+  return del(buildPath);
+});
+
+// remove all files below dist area.
+gulp.task("clean:dist", function () {
+  return del(distPath);
+});
+
+// remove all files in build and dist.
+gulp.task("clean", ["clean:build", "clean:dist"]);
+
+// place vendor css files in build area.
+gulp.task("vendor_css", function () {
+  return gulp.src([
+    // cfg.bootstrap_css.src
+  ])
+  .pipe(gulp.dest(cfg.vendor_css.bld));
+});
+
+// place vendor js files in build
+gulp.task("vendor_js", function () {
+  return gulp.src([
+    cfg.jquery.src,
+    cfg.bootstrap_js.src,
+    cfg.angular.src,
+    cfg.angular_ui_router.src,
+    cfg.angular_resource.src,
+  ])
+  .pipe(gulp.dest(cfg.vendor_js.bld));
+});
+
+// place vendor font files in build
+gulp.task("vendor_fonts", function () {
+  return gulp.src([
+    cfg.bootstrap_fonts.src,
+  ])
+  .pipe(gulp.dest(cfg.vendor_fonts.bld));
+});
+
+// compile css
+gulp.task("css", function () {
+  return gulp.src(cfg.css.src).pipe(debug())
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      includePaths: [cfg.bootstrap_sass.src]
+    }))
+    .pipe(sourcemaps.write("./maps"))
+    .pipe(gulp.dest(cfg.css.bld)).pipe(debug());
+});
+
+// prepare development area
+gulp.task("build", sync.sync(["clean:build", ["vendor_css", "vendor_js", "vendor_fonts", "css"]]));
