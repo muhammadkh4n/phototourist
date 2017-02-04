@@ -10,3 +10,4 @@
 //= require spa/app.constant
 
 //= require spa/states/states.module
+//= require spa/states/states.service
