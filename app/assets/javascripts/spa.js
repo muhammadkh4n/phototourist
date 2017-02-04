@@ -8,3 +8,5 @@
 //= require spa/app.module
 //= require spa/app.router
 //= require spa/app.constant
+
+//= require spa/states/states.module
