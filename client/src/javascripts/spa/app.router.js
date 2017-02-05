@@ -1,10 +1,10 @@
 (function () {
   "use strict";
 
-  angular.module("phototourist")
+  angular.module("spa")
     .config(RouterConfig);
 
-  RouterConfig.$inject = ["$stateProvider", "$urlRouterProvider", "phototourist.APP_CONFIG"];
+  RouterConfig.$inject = ["$stateProvider", "$urlRouterProvider", "spa.APP_CONFIG"];
   function RouterConfig($stateProvider, $urlRouterProvider, APP_CONFIG) {
     $stateProvider
     .state("home", {

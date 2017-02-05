@@ -1,5 +1,5 @@
 (function () {
   "use strict";
 
-  angular.module("phototourist", ["ui.router", "spa.states"]);
+  angular.module("spa", ["ui.router", "spa.states"]);
 })();
