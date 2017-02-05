@@ -11,3 +11,4 @@
 
 //= require spa/states/states.module
 //= require spa/states/states.service
+//= require spa/states/states.controller
