@@ -38,7 +38,7 @@ module Myapp
       allow do
         origins '*'
 
-        resource 'api/*',
+        resource '/api/*',
           :headers => :any,
           :methods => [:get, :post, :put, :delete, :options]
       end
