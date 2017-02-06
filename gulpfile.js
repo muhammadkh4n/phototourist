@@ -158,7 +158,9 @@ gulp.task("run", ["build", "browserSync"], function () {
 gulp.task("dist:assets", ["build"], function () {
   return gulp.src(cfg.root_html.src).pipe(debug())
     .pipe(useref({ searchPath: devResourcePath }))
-    .pipe(gulpif(["**/*constant.js"], replace(cfg.apiUrl.dev, cfg.apiUrl.prd))) // Change urls
+    .pipe(gulpif(["**/*.js"], replace(cfg.apiUrl.dev, cfg.apiUrl.prd))) // Change urls
+    // .pipe(gulpif(["**/*constant.js"], replace(cfg.apiUrl.dev, cfg.apiUrl.prd))) // Change urls
+    // .pipe(replace(cfg.apiUrl.dev, cfg.apiUrl.prd)) // Change urls
     .pipe(gulpif(["**/*.js"], uglify())) // minify js
     .pipe(gulpif(["**/*.css"], cssMin())) // minify css
     .pipe(gulp.dest(distPath)).pipe(debug());
