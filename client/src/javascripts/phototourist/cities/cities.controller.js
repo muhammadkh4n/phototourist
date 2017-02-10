@@ -18,7 +18,7 @@
     return;
 
     function activate() {
-      vm.city = newCity();
+      newCity();
       vm.cities = City.query();
     }
 

@@ -1,0 +1,9 @@
+<form>
+  <label for="city-name">City: </label>
+  <input type="text" placeholder="City Name" ng-model="$ctrl.city.name">
+  <button type="submit" ng-if="!$ctrl.city.id" ng-click="$ctrl.onCreate()">Create City</button>
+  <span ng-if="$ctrl.city.id">
+    <button type="submit" ng-click="$ctrl.onUpdate()">Update City</button>
+    <button type="submit" ng-click="$ctrl.onDelete()">Delete City</button>
+  </span>
+</form>

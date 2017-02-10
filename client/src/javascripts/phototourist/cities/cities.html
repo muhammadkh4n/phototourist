@@ -1,6 +1,11 @@
-<h1>Hello Cities</h1>
-<p>(from phototourist/cities/cities.html)</p>
+<cities-form city="citiesVM.city"
+            on-delete="citiesVM.remove()"
+            on-update="citiesVM.update()"
+            on-create="citiesVM.create()">
+</cities-form>
 
 <ul>
-  <li ng-repeat="city in citiesVM.cities | orderBy: 'name'">{{ city.name }}</li>
+  <li ng-repeat="city in citiesVM.cities | orderBy: 'name'">
+    <a ng-click="citiesVM.edit(city)">{{ city.name }}</a>
+  </li>
 </ul>
