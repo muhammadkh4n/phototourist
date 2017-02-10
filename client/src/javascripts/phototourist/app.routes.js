@@ -11,7 +11,7 @@
       name: "home",
       templateUrl: APP_CONFIG.cities_html,
       controller: "phototourist.cities.CitiesController",
-      controllerAs: "CitiesCtrl"
+      controllerAs: "citiesVM"
     };
 
     $stateProvider
