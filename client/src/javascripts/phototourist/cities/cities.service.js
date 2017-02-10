@@ -10,8 +10,8 @@
       APP_CONFIG.server_url + "/api/cities/:id",
       {id: '@id'},
       {
-        update: { method: 'PUT' },
-        save: { method: 'POST' }
+        update: { method: 'PUT', transformRequest: buildRequestBody },
+        save: { method: 'POST', transformRequest: buildRequestBody }
       }
     );
   }

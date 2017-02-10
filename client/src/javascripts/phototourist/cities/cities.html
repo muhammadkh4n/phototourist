@@ -2,5 +2,5 @@
 <p>(from phototourist/cities/cities.html)</p>
 
 <ul>
-  <li ng-repeat="city in citiesVM.cities">{{ city.name }}</li>
+  <li ng-repeat="city in citiesVM.cities | orderBy: 'name'">{{ city.name }}</li>
 </ul>
