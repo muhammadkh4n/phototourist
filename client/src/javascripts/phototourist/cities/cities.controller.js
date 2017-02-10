@@ -9,6 +9,10 @@
     var vm = this;
     vm.cities;
     vm.city;
+    vm.create = create;
+    vm.update = update;
+    vm.edit = edit;
+    vm.remove = remove;
 
     activate();
     return;
