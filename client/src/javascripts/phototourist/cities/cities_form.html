@@ -2,13 +2,15 @@
   <div class="form-group">
     <input type="text" class="form-control" placeholder="City Name" ng-model="$ctrl.city.name">
   </div>
-  <button type="submit" ng-if="!$ctrl.city.id" ng-click="$ctrl.onCreate()"
-    class="btn btn-primary">
-    <i class="fa fa-plus"></i> Create City</button>
-  <span ng-if="$ctrl.city.id">
-    <button type="submit" ng-click="$ctrl.onUpdate()" class="btn btn-success">
-      <i class="fa fa-save"></i> Update City</button>
-    <button type="submit" ng-click="$ctrl.onDelete()" class="btn btn-danger">
-      <i class="fa fa-trash"></i> Delete City</button>
-  </span>
+  <div class="form-group">
+    <button type="submit" ng-if="!$ctrl.city.id" ng-click="$ctrl.onCreate()"
+      class="btn btn-primary">
+      <i class="fa fa-plus"></i> Create City</button>
+    <span ng-if="$ctrl.city.id">
+      <button type="submit" ng-click="$ctrl.onUpdate()" class="btn btn-success">
+        <i class="fa fa-save"></i> Update City</button>
+      <button type="submit" ng-click="$ctrl.onDelete()" class="btn btn-danger">
+        <i class="fa fa-trash"></i> Delete City</button>
+    </span>
+  </div>
 </form>
