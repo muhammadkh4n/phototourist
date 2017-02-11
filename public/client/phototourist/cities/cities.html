@@ -1,0 +1,1 @@
+<cities-form city="citiesVM.city" on-delete="citiesVM.remove()" on-update="citiesVM.update()" on-create="citiesVM.create()"></cities-form><div class="row"><div class="col-xs-4"><div class="list-group"><a href="#" ng-repeat="city in citiesVM.cities | orderBy: 'name'" class="list-group-item" ng-click="citiesVM.edit(city)">{{ city.name }}</a></div></div></div>

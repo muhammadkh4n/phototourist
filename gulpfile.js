@@ -41,9 +41,11 @@ var cfg = {
 
   // vendor css src globs
   bootstrap_sass:       { src: bowerPath + "/bootstrap-sass/assets/stylesheets/" },
+  fontawesome_sass:     { src: bowerPath + "/font-awesome/scss/" },
 
   // vendor fonts src globs
   bootstrap_fonts:      { src: bowerPath + "/bootstrap-sass/assets/fonts/**/*" },
+  fontawesome_fonts:    { src: bowerPath + "/font-awesome/fonts/**/*" },
 
   // vendor js src globs
   jquery:               { src: bowerPath + "/jquery2/jquery.js" },
@@ -111,6 +113,7 @@ gulp.task("vendor_js", function () {
 gulp.task("vendor_fonts", function () {
   return gulp.src([
     cfg.bootstrap_fonts.src,
+    cfg.fontawesome_fonts.src
   ])
   .pipe(gulp.dest(cfg.vendor_fonts.bld));
 });
@@ -120,7 +123,7 @@ gulp.task("css", function () {
   return gulp.src(cfg.css.src).pipe(debug())
     .pipe(sourcemaps.init())
     .pipe(sass({
-      includePaths: [cfg.bootstrap_sass.src]
+      includePaths: [cfg.bootstrap_sass.src, cfg.fontawesome_sass.src]
     }))
     .pipe(sourcemaps.write("./maps"))
     .pipe(gulp.dest(cfg.css.bld)).pipe(debug());

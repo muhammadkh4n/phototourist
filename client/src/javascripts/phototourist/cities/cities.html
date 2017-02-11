@@ -4,8 +4,13 @@
             on-create="citiesVM.create()">
 </cities-form>
 
-<ul>
-  <li ng-repeat="city in citiesVM.cities | orderBy: 'name'">
-    <a ng-click="citiesVM.edit(city)">{{ city.name }}</a>
-  </li>
-</ul>
+<div class="row">
+  <div class="col-xs-4">
+    <div class="list-group">
+      <a href="#" ng-repeat="city in citiesVM.cities | orderBy: 'name'"
+        class="list-group-item" ng-click="citiesVM.edit(city)">
+        {{ city.name }}
+      </a>
+    </div>
+  </div>
+</div>
