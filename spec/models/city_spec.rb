@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe City, type: :model do
-  include_context "db_cleanup"
+  include_context "db_cleanup", :transaction
   include_context "db_scope"
 
   context "created City (let)" do
