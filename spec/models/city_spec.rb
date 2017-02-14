@@ -2,6 +2,20 @@ require 'rails_helper'
 
 describe City, type: :model do
 
+  before(:all) do
+    DatabaseCleaner[:active_record].strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+  after(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+  before(:each) do
+    DatabaseCleaner.start
+  end
+  after(:each) do
+    DatabaseCleaner.clean
+  end
+
   context "created City (let)" do
     let(:city) { City.create(:name => "test") }
     it { expect(city).to be_persisted }
