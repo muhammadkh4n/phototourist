@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 require "mongo"
-Mongo::Logger.logger.level = ::Logger::INFO
+Mongo::Logger.logger.level = ::Logger::DEBUG
 
 describe State, :type => :model, :orm => :mongoid do
   before(:all) do
-    State.delete_all
+    DatabaseCleaner[:mongoid].strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   context State do
@@ -14,8 +15,11 @@ describe State, :type => :model, :orm => :mongoid do
 
   context "created State (let)" do
     let(:state) { State.create(:name => "test") }
+    before(:each) do
+      DatabaseCleaner.start
+    end
     after(:each) do
-      state.delete
+      DatabaseCleaner.clean
     end
 
     it { expect(state).to be_persisted }
