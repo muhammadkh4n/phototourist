@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 require "mongo"
-Mongo::Logger.logger.level = ::Logger::DEBUG
+Mongo::Logger.logger.level = ::Logger::INFO
 
 describe State, :type => :model, :orm => :mongoid do
   include_context "db_cleanup"
@@ -11,7 +11,7 @@ describe State, :type => :model, :orm => :mongoid do
   end
 
   context "created State (let)" do
-    let(:state) { State.create(:name => "test") }
+    let(:state) { FactoryGirl.create(:state, :name=>"test") }
     include_context "db_scope"
 
     it { expect(state).to be_persisted }
