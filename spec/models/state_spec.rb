@@ -3,7 +3,7 @@ require 'rails_helper'
 require "mongo"
 Mongo::Logger.logger.level = ::Logger::INFO
 
-describe State, type: :model do
+describe State, :type => :model, :orm => :mongoid do
   before(:all) do
     State.delete_all
   end
