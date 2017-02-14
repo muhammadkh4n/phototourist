@@ -16,14 +16,13 @@ describe City, type: :model do
     it { expect(City.find(subject.id)).to_not be_nil }
   end
 
-  context "created City (lazy)" do
-    let(:before_count) { City.count }
+  context "created City (lazy/eager)" do
+    let!(:before_count) { City.count }
     let(:city)         { City.create(:name => "test") }
     it { expect(city).to be_persisted }
     it { expect(city.name).to eq("test") }
     it { expect(City.find(city.id)).to_not be_nil }
-    xit { expect(City.count).to eq(before_count + 1) }
-    pending { expect(City.count).to eq(before_count + 1) }
+    it { city; expect(City.count).to eq(before_count + 1) }
   end
 
 end
