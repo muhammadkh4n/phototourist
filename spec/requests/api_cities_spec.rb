@@ -48,7 +48,13 @@ describe "City API", type: :request do
   end
 
   context "create a new City" do
-    it "can create with provided name"
+    let(:city_state) { FactoryGirl.attributes_for(:city) }
+
+    it "can create with provided name" do
+      post cities_path, city_state.to_json, "Content-Type" => "application/json"
+      expect(response).to have_http_status(:created)
+      expect(response.content_type).to eq("application/json")
+    end
   end
 
   context "existing City" do
