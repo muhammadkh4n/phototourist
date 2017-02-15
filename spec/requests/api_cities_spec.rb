@@ -66,7 +66,17 @@ describe "City API", type: :request do
   end
 
   context "existing City" do
-    it "can update name"
+    let(:city) { FactoryGirl.create(:city) }
+    let(:new_name) { "testing" }
+
+    it "can update name" do
+      expect(city.name).to_not eq(new_name)
+
+      jput city_path(city.id), {:name=>new_name}
+      expect(response).to have_http_status(:no_content)
+      expect(City.find(city.id).name).to eq(new_name)
+    end
+
     it "can be deleted"
   end
 end
