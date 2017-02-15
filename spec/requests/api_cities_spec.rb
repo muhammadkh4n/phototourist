@@ -13,7 +13,7 @@ describe "City API", type: :request do
       expect(response.content_type).to eq("application/json")
       expect(response["X-Frame-Options"]).to eq("SAMEORIGIN")
 
-      payload=JSON.parse(response.body)
+      payload=parsed_body
       expect(payload.count).to eq(cities.count)
       expect(payload.map{|c|c["name"]}).to eq(cities.map{|c|c[:name]})
     end
