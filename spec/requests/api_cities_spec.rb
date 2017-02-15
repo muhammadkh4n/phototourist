@@ -51,9 +51,17 @@ describe "City API", type: :request do
     let(:city_state) { FactoryGirl.attributes_for(:city) }
 
     it "can create with provided name" do
-      post cities_path, city_state.to_json, "Content-Type" => "application/json"
+      jpost cities_path, city_state
       expect(response).to have_http_status(:created)
       expect(response.content_type).to eq("application/json")
+
+      payload=parsed_body
+      expect(payload).to have_key("id")
+      expect(payload).to have_key("name")
+      expect(payload["name"]).to eq(city_state[:name])
+      id=payload["id"]
+
+      expect(City.find(id).name).to eq(city_state[:name])
     end
   end
 
