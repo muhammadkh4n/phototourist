@@ -77,6 +77,15 @@ describe "City API", type: :request do
       expect(City.find(city.id).name).to eq(new_name)
     end
 
-    it "can be deleted"
+    it "can be deleted" do
+      head city_path(city.id)
+      expect(response).to have_http_status(:ok)
+
+      delete city_path(city.id)
+      expect(response).to have_http_status(:no_content)
+
+      head city_path(city.id)
+      expect(response).to have_http_status(:not_found)
+    end
   end
 end
