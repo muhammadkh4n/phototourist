@@ -63,3 +63,28 @@ RSpec.shared_examples "create resource" do |model|
     response_check if respond_to?(:response_check)
   end
 end
+
+RSpec.shared_examples "existing resource" do |model|
+  let(:resource) { FactoryGirl.create(model) }
+  let(:new_name) { "testing" }
+
+  it "can update #{model} name" do
+    expect(resource.name).to_not eq(new_name)
+
+    jput send("#{model}_path", resource.id), {:name=>new_name}
+    expect(response).to have_http_status(:no_content)
+
+    check_update if respond_to?(:check_update)
+  end
+
+  it "can be deleted" do
+    head send("#{model}_path", resource.id)
+    expect(response).to have_http_status(:ok)
+
+    delete send("#{model}_path", resource.id)
+    expect(response).to have_http_status(:no_content)
+
+    head send("#{model}_path", resource.id)
+    expect(response).to have_http_status(:not_found)
+  end
+end

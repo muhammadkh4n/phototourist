@@ -38,7 +38,10 @@ RSpec.describe "State API", type: :request do
   end
 
   context "existing State" do
-    it "can update name"
-    it "can be deleted"
+    it_should_behave_like "existing resource", :state do
+      let(:check_update) do
+        expect(State.find(resource.id).name).to eq(new_name)
+      end
+    end
   end
 end
