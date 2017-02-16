@@ -50,3 +50,16 @@ RSpec.shared_examples "show resource" do |model|
   end
 
 end
+
+RSpec.shared_examples "create resource" do |model|
+  let(:resource_attr) { FactoryGirl.attributes_for(model) }
+  let(:payload) { parsed_body }
+  
+  it "can create #{model} with provided name" do
+    jpost send("#{model.to_s.pluralize}_path"), resource_attr
+    expect(response).to have_http_status(:created)
+    expect(response.content_type).to eq("application/json")
+
+    response_check if respond_to?(:response_check)
+  end
+end

@@ -24,7 +24,17 @@ RSpec.describe "State API", type: :request do
   end
 
   context "create a new State" do
-    it "can create with provided name"
+    it_should_behave_like "create resource", :state do
+      let(:response_check) do
+        expect(payload).to have_key("id")
+        expect(payload).to have_key("name")
+        expect(payload["name"]).to eq(resource_attr[:name])
+
+        id=payload["id"]
+        expect(State.find(id).name).to eq(resource_attr[:name])
+        pp payload
+      end
+    end
   end
 
   context "existing State" do
