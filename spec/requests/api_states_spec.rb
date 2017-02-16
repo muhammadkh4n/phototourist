@@ -13,8 +13,14 @@ RSpec.describe "State API", type: :request do
   end
 
   context "a specific State exists" do
-    it "returns City when using correct ID"
-    it "returns not found when using incorrect ID"
+    it_should_behave_like "show resource", :state do
+      let(:response_check) do
+        expect(payload).to have_key("id")
+        expect(payload).to have_key("name")
+        expect(payload["id"]).to eq(resource.id.to_s)
+        expect(payload["name"]).to eq(resource.name)
+      end
+    end
   end
 
   context "create a new State" do
