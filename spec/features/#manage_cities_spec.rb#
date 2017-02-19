@@ -1,0 +1,7 @@
+require 'rails_helper'
+
+RSpec.feature "ManageCities", type: :feature, :js => true do
+  include_context "db_cleanup_each"
+  CITY_FORM_CSS="body > div > div > div > div > form"
+  CITY_FORM_XPATH="//h3[text()='State]"
+end

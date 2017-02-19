@@ -16,8 +16,52 @@
 # users commonly want.
 
 require 'mongoid-rspec'
+require 'capybara/rspec'
 require_relative 'support/database_cleaners.rb'
 require_relative 'support/api_helper.rb'
+
+browser=:chrome
+Capybara.register_driver :selenium do |app|
+  if ENV["SELENIUM_REMOTE_HOST"]
+    docker_ip = %x(/sbin/ip route|awk '/default/ { print $3 }').strip
+    Capybara.app_host = "http://#{docker_ip}:#{ENV['APP_PORT']}"
+    puts "Cappybara.app_host=#{Capybara.app_host}"
+    Capybara.server_host = "0.0.0.0"
+    Capybara.server_port = ENV["APP_PORT"]
+    Capybara::Selenium::Driver.new(app,
+                                   :browser => :remote,
+                                   :url => "http://#{ENV['SELENIUM_REMOTE_HOST']}:4444/wd/hub",
+                                   :desired_capabilities => :chrome)
+  elsif browser == :chrome
+    if ENV["CHROMEDRIVER_BINARY_PATH"]
+      Selenium::WebDriver::Chrome.driver_path=ENV["CHROMEDRIVER_BINARY_PATH"]
+    end
+    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  else
+    if ENV["FIREFOX_BINARY_PATH"]
+      require 'selenium/webdriver'
+      Selenium::WebDriver::Firefox::Binary.path=ENV["FIREFOX_BINARY_PATH"]
+    end
+    Capybara::Selenium::Driver.new(app, :browser => :firefox)
+  end
+end
+
+require 'capybara/poltergeist'
+# set the default driver
+Capybara.configure do |config|
+  config.default_driver = :rack_test
+  # used when js meta on test
+  #config.javascript_driver = :poltergeist
+  config.javascript_driver = :selenium
+end
+
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app,
+                                    phantomjs_logger: StringIO.new,
+                                    #logger: STDERR
+                                   )
+end
+
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

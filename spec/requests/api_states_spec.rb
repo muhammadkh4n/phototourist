@@ -32,7 +32,6 @@ RSpec.describe "State API", type: :request do
 
         id=payload["id"]
         expect(State.find(id).name).to eq(resource_attr[:name])
-        pp payload
       end
     end
   end
