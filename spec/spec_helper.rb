@@ -51,8 +51,8 @@ require 'capybara/poltergeist'
 Capybara.configure do |config|
   config.default_driver = :rack_test
   # used when js meta on test
-  #config.javascript_driver = :poltergeist
-  config.javascript_driver = :selenium
+  config.javascript_driver = :poltergeist
+  # config.javascript_driver = :selenium
 end
 
 Capybara.register_driver :poltergeist do |app|
