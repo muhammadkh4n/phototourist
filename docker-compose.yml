@@ -50,7 +50,7 @@ services:
       - APP_PORT=3010
       - SELENIUM_REMOTE_HOST=selenium
       - VNC_PASSWORD=password
-
+      - COVERAGE
   test:
     build: .
     command: docker/docker-test-commands.sh
