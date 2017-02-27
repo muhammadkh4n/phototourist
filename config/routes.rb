@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :things, except: [:new, :edit]
   get 'authn/whoami'
 
   get 'authn/checkme'
@@ -10,6 +9,7 @@ Rails.application.routes.draw do
     resources :cities, except: [:new, :edit]
     resources :states, except: [:new, :edit]
     resources :images, except: [:new, :edit]
+    resources :things, except: [:new, :edit]
   end
 
   get "/client-assets/:name.:format", :to => redirect("/client/client-assets/%{name}.%{format}")
