@@ -33,7 +33,7 @@ module ApiHelper
   def logout status=:ok
     jdelete destroy_user_session_path
     @last_tokens={}
-    expect(response).to have_http_status(status)
+    expect(response).to have_http_status(status) if status
   end
 
   def access_tokens?
@@ -88,39 +88,49 @@ RSpec.shared_examples "show resource" do |model|
 end
 
 RSpec.shared_examples "create resource" do |model|
-  let(:resource_attr) { FactoryGirl.attributes_for(model) }
-  let(:payload) { parsed_body }
-  
-  it "can create #{model} with provided name" do
-    jpost send("#{model.to_s.pluralize}_path"), resource_attr
-    expect(response).to have_http_status(:created)
-    expect(response.content_type).to eq("application/json")
+  let(:resource_state) { FactoryGirl.attributes_for(model) }
+  let(:payload)        { parsed_body }
+  let(:resource_id)    { payload["id"] }
 
+  it "can create valid #{model}" do
+    jpost send("#{model.to_s.pluralize}_path"), resource_state
+    expect(response).to have_http_status(:created)
+    expect(response.content_type).to eq("application/json") 
+
+    # verify payload has ID and delegate for addition checks
+    expect(payload).to have_key("id")
     response_check if respond_to?(:response_check)
+
+    # verify we can locate the created instance in DB
+    jget send("#{model}_path", resource_id)
+    expect(response).to have_http_status(:ok)
   end
 end
 
-RSpec.shared_examples "existing resource" do |model|
-  let(:resource) { FactoryGirl.create(model) }
-  let(:new_name) { "testing" }
+RSpec.shared_examples "modifiable resource" do |model|
+  let(:resource) do 
+    jpost send("#{model.to_s.pluralize}_path"), FactoryGirl.attributes_for(model)
+    expect(response).to have_http_status(:created)
+    parsed_body
+  end
+  let(:new_state) { FactoryGirl.attributes_for(model) }
 
-  it "can update #{model} name" do
-    expect(resource.name).to_not eq(new_name)
-
-    jput send("#{model}_path", resource.id), {:name=>new_name}
+  it "can update #{model}" do
+    # change to new state
+    jput send("#{model}_path", resource["id"]), new_state
     expect(response).to have_http_status(:no_content)
 
-    check_update if respond_to?(:check_update)
+    update_check if respond_to?(:update_check)
   end
 
   it "can be deleted" do
-    head send("#{model}_path", resource.id)
+    jhead send("#{model}_path", resource["id"])
     expect(response).to have_http_status(:ok)
 
-    delete send("#{model}_path", resource.id)
+    jdelete send("#{model}_path", resource["id"])
     expect(response).to have_http_status(:no_content)
-
-    head send("#{model}_path", resource.id)
+    
+    jhead send("#{model}_path", resource["id"])
     expect(response).to have_http_status(:not_found)
   end
 end

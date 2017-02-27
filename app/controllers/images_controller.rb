@@ -12,6 +12,7 @@ class ImagesController < ApplicationController
 
   def create
     @image = Image.new(image_params)
+    @image.creator_id = current_user.id
 
     if @image.save
       render :show, status: :created, location: @image

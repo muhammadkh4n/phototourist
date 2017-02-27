@@ -28,18 +28,19 @@ RSpec.describe "State API", type: :request do
       let(:response_check) do
         expect(payload).to have_key("id")
         expect(payload).to have_key("name")
-        expect(payload["name"]).to eq(resource_attr[:name])
+        expect(payload["name"]).to eq(resource_state[:name])
 
         id=payload["id"]
-        expect(State.find(id).name).to eq(resource_attr[:name])
+        expect(State.find(id).name).to eq(resource_state[:name])
       end
     end
   end
 
   context "existing State" do
-    it_should_behave_like "existing resource", :state do
-      let(:check_update) do
-        expect(State.find(resource.id).name).to eq(new_name)
+    it_should_behave_like "modifiable resource", :state do
+      let(:update_check) do
+        expect(resource["name"]).to_not eq(new_state[:name])
+        expect(State.find(resource["id"]).name).to eq(new_state[:name])
       end
     end
   end
