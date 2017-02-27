@@ -4,10 +4,13 @@ module ApiHelper
   end
 
   # auto create methods
-  ["post", "put"].each do |http_method|
+  ["post", "put", "get", "patch", "head", "delete"].each do |http_method|
     define_method("j#{http_method}") do |path, params={}, headers={}|
-      headers=headers.merge("Content-Type" => "application/json") if !params.empty?
-      self.send(http_method, path, params.to_json, headers)
+      if ["post", "put", "patch"].include? http_method
+        headers=headers.merge("Content-Type" => "application/json") if !params.empty?
+        params = params.to_json
+      end
+      self.send(http_method, path, params, headers.merge(access_tokens))
     end
   end
 
@@ -25,6 +28,12 @@ module ApiHelper
     jpost user_session_path, credentials.slice(:email, :password)
     expect(response).to have_http_status(status)
     return response.ok? ? parsed_body["data"] : parsed_body
+  end
+
+  def logout status=:ok
+    jdelete destroy_user_session_path
+    @last_tokens={}
+    expect(response).to have_http_status(status)
   end
 
   def access_tokens?

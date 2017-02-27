@@ -94,7 +94,7 @@ RSpec.describe "Authentication Api", type: :request do
       end
       
       it "grants access to resource" do
-        get authn_checkme_path, access_tokens
+        jget authn_checkme_path#, access_tokens
         expect(response).to have_http_status(:ok)
 
         payload=parsed_body
@@ -106,16 +106,26 @@ RSpec.describe "Authentication Api", type: :request do
         (1..10).each do |i|
           # puts i
           #quick calls < 5sec use same tokens
-          get authn_checkme_path, access_tokens
+          jget authn_checkme_path#, access_tokens
           expect(response).to have_http_status(:ok)
         end
       end
       
-      it "logout"
+      it "logout" do
+        logout
+        expect(access_tokens?).to be false
+        expect(parsed_body).to include("success"=>true)
+        
+        jget authn_checkme_path
+        expect(response).to have_http_status(:unauthorized)
+        expect(parsed_body).to include("errors"=>["Authorized users only."])
+      end
     end
 
     context "invalid password" do
-      it "rejects credentials"
+      it "rejects credentials" do
+        login account.merge(:password=>"badpassword"), :unauthorized
+      end
     end
   end
 end
