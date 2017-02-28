@@ -17,7 +17,7 @@ class ThingImagesController < ApplicationController
   def linkable_things
     image = Image.find(params[:image_id])
     @things = Thing.not_linked(image)
-    render "thing/index"
+    render "things/index"
   end
 
   def create
