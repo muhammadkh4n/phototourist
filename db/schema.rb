@@ -52,6 +52,8 @@ ActiveRecord::Schema.define(version: 20170228114447) do
     t.datetime "updated_at",  null: false
   end
 
+  add_index "things", ["name"], name: "index_things_on_name", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
     t.string   "uid",                    default: "",      null: false
@@ -73,8 +75,8 @@ ActiveRecord::Schema.define(version: 20170228114447) do
     t.string   "image"
     t.string   "email"
     t.json     "tokens"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
