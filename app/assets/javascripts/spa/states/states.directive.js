@@ -4,7 +4,7 @@
   angular.module("spa.states")
     .directive("states", StatesDirective);
 
-  StatesDirective.$inject = ["spa.APP_CONFIG"];
+  StatesDirective.$inject = ["spa.config.APP_CONFIG"];
   function StatesDirective(APP_CONFIG) {
     var ddo = {
       templateUrl: APP_CONFIG.states_html,
