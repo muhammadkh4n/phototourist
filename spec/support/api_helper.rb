@@ -53,7 +53,7 @@ RSpec.shared_examples "resource index" do |model|
   let(:payload) { parsed_body }
 
   it "return all #{model} instances" do
-    get send("#{model.to_s.pluralize}_path"), {}, {"Accept"=>"application/json"}
+    jget send("#{model.to_s.pluralize}_path"), {}, {"Accept"=>"application/json"}
     expect(response).to have_http_status(:ok)
     expect(response.content_type).to eq("application/json")
 
@@ -68,14 +68,14 @@ RSpec.shared_examples "show resource" do |model|
   let(:payload) { parsed_body }
 
   it "returns #{model} when using correct ID" do
-    get send("#{model}_path", resource.id)
+    jget send("#{model}_path", resource.id)
     expect(response).to have_http_status(:ok)
     expect(response.content_type).to eq("application/json")
     response_check if respond_to?(:response_check)
   end
 
   it "returns not found when using incorrect ID" do
-    get send("#{model}_path", bad_id)
+    jget send("#{model}_path", bad_id)
     expect(response).to have_http_status(:not_found)
     expect(response.content_type).to eq("application/json")
 

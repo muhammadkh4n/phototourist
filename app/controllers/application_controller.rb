@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from Mongoid::Errors::DocumentNotFound, with: :record_not_found
+  rescue_from ActionController::ParameterMissing, with: :param_missing
   
   protected
     def record_not_found(exception)
@@ -20,5 +21,13 @@ class ApplicationController < ActionController::API
 
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    end
+
+    def param_missing(exception)
+      payload = {
+        errors: { full_messages: ["#{exception.message}"] }
+      }
+      render json: payload, status: :bad_request
+      Rails.logger.debug exception.message
     end
 end

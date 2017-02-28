@@ -1,7 +1,7 @@
 class ThingsController < ApplicationController
   before_action :set_thing, only: [:show, :update, :destroy]
   wrap_parameters :thing, include: ["name", "description", "notes"]
-  before_action :authenticate_user!, only: [:create, :index, :update, :destroy]
+  before_action :authenticate_user!, only: [:create, :update, :destroy]
   
   def index
     @things = Thing.all
