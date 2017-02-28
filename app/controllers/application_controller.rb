@@ -11,23 +11,27 @@ class ApplicationController < ActionController::API
   rescue_from ActionController::ParameterMissing, with: :param_missing
   
   protected
-    def record_not_found(exception)
-      payload = {
-        errors: { full_messages: ["cannot find id[#{params[:id]}]"] }
-      }
-      render :json=>payload, :status=>:not_found
-      Rails.logger.debug exception.message
-    end
+  def full_message_error full_message, status
+    payload = {
+      errors: { full_messages: ["#{full_message}"] }
+    }
+    render json: payload, status: status
+  end
+  
+  def record_not_found(exception)
+    full_message_error "cannot find id[#{params[:id]}]", :not_found
+    Rails.logger.debug exception.message
+  end
+  
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  end
 
-    def configure_permitted_parameters
-      devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
-    end
-
-    def param_missing(exception)
-      payload = {
-        errors: { full_messages: ["#{exception.message}"] }
-      }
-      render json: payload, status: :bad_request
-      Rails.logger.debug exception.message
-    end
+  def param_missing(exception)
+    payload = {
+      errors: { full_messages: ["#{exception.message}"] }
+    }
+    render json: payload, status: :bad_request
+    Rails.logger.debug exception.message
+  end
 end
