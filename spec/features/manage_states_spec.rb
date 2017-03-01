@@ -36,7 +36,9 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
     background(:each) do
       visit root_path
       expect(page).to have_css("h3", text:"States")
-      expect(page).to have_css("li", count:0)
+      within(:xpath, STATE_FORM_XPATH) do
+        expect(page).to have_css("li", count:0)
+      end
     end
     scenario "has input form" do
       expect(page).to have_css("label", text:"Name")
@@ -69,7 +71,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
       # find(:xpath, "//button[@ng-click='statesVM.create()']").click
       find(:xpath, "//button[contains(@ng-click, 'create()')]").click
       within(:xpath, STATE_LIST_XPATH) do
-        expect(page).to have_xpath("//li", count: 1)
+        expect(page).to have_xpath(".//li", count: 1)
         # expect(page).to have_xpath("//*[text()='#{state_attr[:name]}']")
         expect(page).to have_content(state_attr[:name])
       end
@@ -86,16 +88,20 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
     scenario "can be updated" do
       existing_name=state_attr[:name]
       new_name=FactoryGirl.attributes_for(:state)[:name]
-        
-      expect(page).to have_css("li", count: 1)
-      expect(page).to have_css("li", :text=>existing_name)
-      expect(page).to have_no_css("li", :text=>new_name)
+
+      within(:xpath, STATE_LIST_XPATH) do
+        expect(page).to have_css("li", count: 1)
+        expect(page).to have_css("li", :text=>existing_name)
+        expect(page).to have_no_css("li", :text=>new_name)
+      end
       
       update_state(existing_name, new_name)
 
-      expect(page).to have_css("li", :count=>1)
-      expect(page).to have_no_css("li", :text=>existing_name)
-      expect(page).to have_css("li", :text=>new_name)
+      within(:xpath, STATE_LIST_XPATH) do
+        expect(page).to have_css("li", :count=>1)
+        expect(page).to have_no_css("li", :text=>existing_name)
+        expect(page).to have_css("li", :text=>new_name)
+      end
     end
     
     scenario "can be deleted" do

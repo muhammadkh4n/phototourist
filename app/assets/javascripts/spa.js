@@ -16,6 +16,10 @@
 //= require spa/authn/authn.config
 //= require spa/authn/authn.service
 //= require spa/authn/signup/signup.component
+//= require spa/authn/authn_session/authn_session.component
+
+//= require spa/layout/layout.module
+//= require spa/layout/navbar/navbar.component
 
 //= require spa/states/states.module
 //= require spa/states/states.service

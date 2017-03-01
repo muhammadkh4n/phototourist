@@ -37,7 +37,9 @@ module StateUiHelper
     within(:xpath, STATE_LIST_XPATH) do
       find("li a", :text => name).click
     end
-    find(:xpath, "//button[contains(@ng-click, 'remove()')]").click
+    within(:xpath, STATE_FORM_XPATH) do
+      find(:xpath, "//button[contains(@ng-click, 'remove()')]").click
+    end
     # within(:xpath, STATE_FORM_XPATH) do
     #   click_button("Remove State")
     # end
