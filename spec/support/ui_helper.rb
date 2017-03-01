@@ -1,5 +1,5 @@
 module UiHelper
-  def signup registration, success=true
+  def fillin_signup registration
     visit "#{ui_path}/#/signup" unless page.has_css?("#signup-form")
     expect(page).to have_css("#signup-form")
 
@@ -8,6 +8,10 @@ module UiHelper
     fill_in("signup-password", :with=>registration[:password])
     password_confirm = registration[:password_confirmation] ||= registration[:password]
     fill_in("signup-password_confirmation", :with=>password_confirm)
+  end
+
+  def signup registration, success=true
+    fillin_signup registration
     click_on("Sign Up")
     if success
       expect(page).to have_no_button("Sign Up")
