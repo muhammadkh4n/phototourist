@@ -8,17 +8,9 @@ RSpec.feature "Authns", type: :feature, :js=>true do
     context "valid registration" do
       scenario "creates account and navigates away from signup page" do
         start_time=Time.now
-
-        visit "#{ui_path}/#/signup" unless page.has_css?("#signup-form")
-        expect(page).to have_css("#signup-form")
-
-        fill_in("signup-email", :with=>user_props[:email])
-        fill_in("signup-name", :with=>user_props[:name])
-        fill_in("signup-password", :with=>user_props[:password])
-        fill_in("signup-password_confirmation", :with=>user_props[:password])
-        click_on("Sign Up")  
-        expect(page).to have_no_button("Sign Up")
-
+        
+        signup user_props
+        
         #check we re-directed to home page
         expect(page).to have_no_css("#signup-form")
         #check the DB for the existance of the User account
@@ -29,7 +21,22 @@ RSpec.feature "Authns", type: :feature, :js=>true do
     end
 
     context "rejected registration" do
-      scenario "account not created and stays on page"
+      before(:each) do
+        signup user_props
+        expect(page).to have_no_css("#signup-form")
+      end
+
+      scenario "account not created and stays on page" do
+        dup_user=FactoryGirl.attributes_for(:user, :email=>user_props[:email])
+        signup dup_user, false #should get rejected by server
+
+        #account not created
+        expect(User.where(:email=>user_props[:email],:name=>user_props[:name])).to exist
+        expect(User.where(:email=>dup_user[:email],:name=>dup_user[:name])).to_not exist
+
+        expect(page).to have_css("#signup-form")
+        expect(page).to have_button("Sign Up")
+      end
       scenario "displays error messages"
     end
 
