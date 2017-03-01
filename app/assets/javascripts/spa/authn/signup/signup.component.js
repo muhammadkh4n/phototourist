@@ -27,6 +27,7 @@
 
 		function signup() {
 			console.log("signup...");
+			$scope.signup_form.$setPristine();
 			Authn.signup(vm.signupForm)
 				.then(
 					function(response) {
@@ -35,6 +36,7 @@
 						$state.go("home");
 					},
 					function(response) {
+						vm.signupForm["errors"] = response.data.errors;
 						console.log("signup failure", response, vm);
 					}
 				);
