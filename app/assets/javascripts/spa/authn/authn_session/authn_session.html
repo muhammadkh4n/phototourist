@@ -32,8 +32,12 @@
 <div ng-show="$ctrl.getCurrentUser()">
 	<form id="logout-form"
 				ng-submit="$ctrl.logout()">
+		<span id="user_id"
+					class="id"
+					ng-if="$ctrl.getCurrentUser()">{{$ctrl.getCurrentUser().id}}</span>
 
 		<div id="logout-identity">
+			<label>{{$ctrl.getCurrentUserName()}}</label>
 			<button class="btn btn-default"
 							name="logout_submit"
 							type="submit">Logout</button>
