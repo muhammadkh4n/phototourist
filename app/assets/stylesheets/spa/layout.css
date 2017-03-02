@@ -9,3 +9,10 @@ body {
 form .invalid {
 		color: red;
 }
+
+/**** NAVBAR *******/
+
+.nav li form {
+	padding-left: 10px;
+	padding-right: 10px;
+}

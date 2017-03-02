@@ -34,11 +34,15 @@
 
 		function login() {
 			console.log("login");
+			$scope.login_form.$setPristine();
+			vm.loginForm["errors"] = null;
 			Authn.login(vm.loginForm).then(
-				function (response) {
+				function(response){
 					vm.dropdown.removeClass("open");
-				}
-			);
+				},
+				function(response){
+					vm.loginForm["errors"] = response.errors;
+				});
 		}
 
 		function logout() {
