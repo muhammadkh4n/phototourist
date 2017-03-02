@@ -20,6 +20,7 @@
 		vm.login = login;
 		vm.getCurrentUser = Authn.getCurrentUser;
 		vm.getCurrentUserName = Authn.getCurrentUserName;
+		vm.logout = logout;
 
 		vm.$onInit = function() {
 			console.log("AuthnSessionController", $scope);
@@ -38,6 +39,13 @@
 					vm.dropdown.removeClass("open");
 				}
 			);
+		}
+
+		function logout() {
+			Authn.logout().then(
+				function(){
+					vm.dropdown.removeClass("open");
+				});
 		}
 	}
 })();
