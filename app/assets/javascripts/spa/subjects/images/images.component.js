@@ -58,6 +58,7 @@
     vm.clear  = clear;
     vm.update  = update;
     vm.remove  = remove;
+		vm.linkThings = linkThings;
 
     vm.$onInit = function() {
       console.log("ImageEditorController",$scope);

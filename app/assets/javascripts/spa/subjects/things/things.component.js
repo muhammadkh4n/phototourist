@@ -138,14 +138,15 @@
     }
 
     function handleError(response) {
-      //console.log("error", response);
+      console.log("error", response);
       if (response.data) {
         vm.item["errors"]=response.data.errors;          
       } 
       if (!vm.item.errors) {
         vm.item["errors"]={}
         vm.item["errors"]["full_messages"]=[response]; 
-      }      
+      }
+			$scope.thingform.$setPristine();
     }    
   }
 
