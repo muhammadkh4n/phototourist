@@ -3,7 +3,7 @@ module StateUiHelper
   STATE_LIST_XPATH="//h3[text()='States']/../ul"
 
   def create_state state_attr
-    visit root_path unless page.has_css?("h3", text:"States")
+    visit "#{root_path}/#/" unless page.has_css?("h3", text:"States")
     expect(page).to have_css("h3", text:"States")
     within(:xpath, STATE_FORM_XPATH) do
       fill_in("name", with: state_attr[:name])
@@ -15,7 +15,7 @@ module StateUiHelper
   end
 
   def update_state existing_name, new_name
-    visit root_path unless page.has_css?("h3", text:"States")
+    visit "#{root_path}/#/" unless page.has_css?("h3", text:"States")
     expect(page).to have_css("h3", text:"States") #on the Foos page
     
     within(:xpath, STATE_LIST_XPATH) do
@@ -32,7 +32,7 @@ module StateUiHelper
   end
 
   def delete_state name
-    visit root_path unless page.has_css?("h3", text:"State")
+    visit "#{root_path}/#/" unless page.has_css?("h3", text:"State")
     
     within(:xpath, STATE_LIST_XPATH) do
       find("li a", :text => name).click
