@@ -28,3 +28,7 @@
 //= require spa/states/states.service
 //= require spa/states/states.controller
 //= require spa/states/states.directive
+
+//= require spa/subjects/subjects.module
+//= require spa/subjects/images/images.service
+//= require spa/subjects/images/images.component
