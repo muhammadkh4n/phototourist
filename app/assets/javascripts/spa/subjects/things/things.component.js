@@ -31,8 +31,8 @@
 
 	ThingEditorController.$inject = ["$scope","$q",
                                    "$state","$stateParams",
-                                   "spa-demo.subjects.Thing",
-                                   "spa-demo.subjects.ThingImage"];
+                                   "spa.subjects.Thing",
+                                   "spa.subjects.ThingImage"];
   function ThingEditorController($scope, $q, $state, $stateParams, 
                                  Thing, ThingImage) {
     var vm=this;
