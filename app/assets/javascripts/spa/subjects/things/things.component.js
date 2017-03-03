@@ -29,7 +29,7 @@
     return APP_CONFIG.thing_selector_html;
   }    
 
-	ThingEditorController.$inject = ["$scope","$q",
+  ThingEditorController.$inject = ["$scope","$q",
                                    "$state","$stateParams",
                                    "spa.subjects.Thing",
                                    "spa.subjects.ThingImage"];
@@ -44,7 +44,7 @@
     vm.$onInit = function() {
       console.log("ThingEditorController",$scope);
       if ($stateParams.id) {
-				reload($stateParams.id);
+        reload($stateParams.id);
       } else {
         newResource();
       }
@@ -57,7 +57,7 @@
       return vm.item;
     }
 
-		function reload(thingId) {
+    function reload(thingId) {
       var itemId = thingId ? thingId : vm.item.id;      
       console.log("re/loading thing", itemId);
       vm.images = ThingImage.query({thing_id:itemId});
@@ -70,7 +70,7 @@
         });
       $q.all([vm.item.$promise,vm.images.$promise]).catch(handleError);
     }
-		
+
     function create() {      
       $scope.thingform.$setPristine();
       vm.item.errors = null;
@@ -89,13 +89,32 @@
     function update() {      
       $scope.thingform.$setPristine();
       vm.item.errors = null;
-      vm.item.$update().then(
-        function(){
-          console.log("thing updated", vm.item);
-          $state.reload();
-        },
-        handleError);
+      var update=vm.item.$update();
+      updateImageLinks(update);
     }
+    function updateImageLinks(promise) {
+      console.log("updating links to images");
+      var promises = [];
+      if (promise) { promises.push(promise); }
+      angular.forEach(vm.images, function(ti){
+        if (ti.toRemove) {
+          promises.push(ti.$remove());
+        } else if (ti.originalPriority != ti.priority) {          
+          promises.push(ti.$update());
+        }
+      });
+
+      console.log("waiting for promises", promises);
+      $q.all(promises).then(
+        function(response){
+          console.log("promise.all response", response); 
+          //update button will be disabled when not $dirty
+          $scope.thingform.$setPristine();
+          reload(); 
+        }, 
+        handleError);    
+    }
+
 
     function remove() {      
       vm.item.$remove().then(
