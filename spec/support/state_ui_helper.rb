@@ -7,7 +7,8 @@ module StateUiHelper
     expect(page).to have_css("h3", text:"States")
     within(:xpath, STATE_FORM_XPATH) do
       fill_in("name", with: state_attr[:name])
-      click_button("Create State")
+      expect(page).to have_field("name", :with=>foo_state[:name])
+      click_button("Create Foo", :disabled=>false)
     end
     within(:xpath, STATE_LIST_XPATH) do
       expect(page).to have_css("li a", :text => state_attr[:name])
@@ -22,7 +23,7 @@ module StateUiHelper
       find("li a", :text => existing_name).click
     end
     within(:xpath, STATE_FORM_XPATH) do
-      expect(find_field("name").value).to eq(existing_name)
+      find_field("name", :readonly=>false, :wait=>5)
       fill_in("name", :with => new_name)
       click_button("Update State")
     end
