@@ -79,6 +79,7 @@ end
 
 RSpec.shared_examples "resource index" do |model|
   let!(:resources) { (1..5).map {|i| FactoryGirl.create(model) } }
+  let!(:apply_roles) { apply_organizer User.find(user["id"]), resources }
   let(:payload) { parsed_body }
 
   it "return all #{model} instances" do
@@ -93,6 +94,7 @@ end
 
 RSpec.shared_examples "show resource" do |model|
   let(:resource) { FactoryGirl.create(model) }
+  let!(:apply_roles) { apply_organizer User.find(user["id"]), resource }
   let(:bad_id) { 12323423234 }
   let(:payload) { parsed_body }
 
