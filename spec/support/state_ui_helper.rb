@@ -7,7 +7,7 @@ module StateUiHelper
     expect(page).to have_css("h3", text:"States")
     within(:xpath, STATE_FORM_XPATH) do
       fill_in("name", with: state_attr[:name])
-      expect(page).to have_field("name", :with=>foo_state[:name])
+      expect(page).to have_field("name", :with=>state_attr[:name])
       click_button("Create Foo", :disabled=>false)
     end
     within(:xpath, STATE_LIST_XPATH) do
