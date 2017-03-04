@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "State API", type: :request do
   include_context "db_cleanup_each"
+  let(:user) { login signup(FactoryGirl.attributes_for(:user)) }
 
   context "caller requests list of States" do
     it_should_behave_like "resource index", :state do
