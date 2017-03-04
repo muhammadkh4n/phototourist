@@ -52,6 +52,29 @@ module ApiHelper
     expect(response).to have_http_status(status) if status
     parsed_body
   end
+
+  def apply_admin account
+    User.find(account[:id]).roles.create(:role_name=>Role::ADMIN)
+    return account
+  end
+  def apply_originator account, model_class
+    User.find(account[:id]).add_role(Role::ORIGINATOR, model_class).save
+    return account
+  end
+  def apply_role account, role, object
+    user=User.find(account[:id])
+    arr=object.kind_of?(Array) ? object : [object]
+    arr.each do |m|
+      user.add_role(role, m).save
+    end
+    return account
+  end
+  def apply_organizer account, object
+    apply_role(account,Role::ORGANIZER, object)
+  end
+  def apply_member account, object
+    apply_role(account, Role::MEMBER, object)
+  end
 end
 
 RSpec.shared_examples "resource index" do |model|
