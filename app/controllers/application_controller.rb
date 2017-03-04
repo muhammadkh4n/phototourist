@@ -43,6 +43,6 @@ class ApplicationController < ActionController::API
       errors: {full_messages:["#{user} not authorized to #{exception.query}"]}
     }
     render :json=>payload, :status=>:forbidden
-    Rails.logger.debug.exception
+    Rails.logger.debug exception
   end
 end
