@@ -71,9 +71,11 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
       # find(:xpath, "//button[@ng-click='statesVM.create()']").click
       find(:xpath, "//button[contains(@ng-click, 'create()')]").click
       within(:xpath, STATE_LIST_XPATH) do
-        expect(page).to have_xpath(".//li", count: 1)
-        # expect(page).to have_xpath("//*[text()='#{state_attr[:name]}']")
-        expect(page).to have_content(state_attr[:name])
+        using_wait_time 10 do
+          expect(page).to have_xpath(".//li", count: 1)
+          # expect(page).to have_xpath("//*[text()='#{state_attr[:name]}']")
+          expect(page).to have_content(state_attr[:name])
+        end
       end
     end
   end
