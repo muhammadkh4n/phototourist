@@ -141,23 +141,82 @@ RSpec.describe "ImageContent", type: :model do
   end
 
   context "image content factory" do
-    it "can build input attributes"
-    it "encoded input content attribute with base64"
-    it "can create image content"
-    it "can create image contents from attributes"
+    include_context "db_scope"
+    
+    it "can build input attributes" do
+      props = FactoryGirl.attributes_for(:image_content)
+      expect(props).to include(:content_type => "image/jpg")
+      expect(props).to include(:content)
+    end
+    it "encoded input content attribute with base64" do
+      props = FactoryGirl.attributes_for(:image_content)
+      data = Base64.decode64(props[:content])
+      binary = ImageContent.to_binary(props[:content])
+      expect(data.size).to eq(binary.data.size)
+      expect(data).to eq(binary.data)
+    end
+    it "can create image content" do
+      image = Image.create(creator_id: 1)
+      ic = FactoryGirl.create(:image_content, image_id: image.id)
+      expect(ic).to be_valid
+      expect(ic.image_id).to eq(image.id)
+    end
+    it "can create image contents from attributes" do
+      image = Image.create(creator_id: 1)
+      props = FactoryGirl.attributes_for(:image_content)
+      ic = ImageContent.create(props.merge(image_id: image.id))
+      expect(ic).to be_valid
+    end
   end
 
   context "Image has ImageContent" do
-    it "has image_content"
+    it "has image_content" do
+      expect(Image.new).to respond_to(:image_content)
+    end
     context "Image factory" do
-      it "generates attributes with content"
-      it "builds Image with content"
+      it "generates attributes with content" do
+        props = FactoryGirl.attributes_for(:image)
+        expect(props).to include(:image_content)
+        expect(props[:image_content].class).to eq(Hash)
+        expect(props[:image_content]).to include(:content_type, :content)
+        expect(props[:image_content][:content_type]).to eq("image/jpg")
+      end
+      it "builds Image with content" do
+        image = FactoryGirl.build(:image)
+        expect(image.image_content).to_not be_nil
+        expect(image.image_content.class).to eq(ImageContent)
+        expect(image.image_content.width).to_not be_nil
+        expect(image.image_content.height).to_not be_nil
+        expect(image.image_content.content_type).to eq("image/jpg")
+      end
     end
   end
 
   context "Image scaling" do
-    it "creates for Image with ImageContent"
-    it "creates for Image and ImageContent"
+    include_context "db_scope"
+    let(:image) { FactoryGirl.build(:image) }
+    let(:image_content) { FactoryGirl.build(:image_content) }
+    before(:each) do
+      expect(defined? ImageContentCreator).to eq("constant")
+      image.save
+    end
+    after(:each) do
+      expect(ImageContent.image(image).count).to eq(5)
+      expect(ImageContent.image(image).where(:original=>true).count).to eq(1)
+      expect(ImageContent.image(image).not.where(:original=>true).count).to eq(4)
+    end
+    
+    it "creates for Image with ImageContent" do
+      creator = ImageContentCreator.new(image)
+      creator.build_contents
+      expect(creator.save!).to eq true
+    end
+    it "creates for Image and ImageContent" do
+      image.image_content = nil
+      creator = ImageContentCreator.new(image, image_content)
+      creator.build_contents
+      expect(creator.save!).to eq true
+    end
   end
 
   
