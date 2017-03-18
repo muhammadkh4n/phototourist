@@ -1,6 +1,7 @@
 /* Phototourist SPA CSS manifest file
  *
  *= require bootstrap
+ *= require ui-cropper
  *= require spa/layout
  *= require spa/authn
  *= require spa/subjects
