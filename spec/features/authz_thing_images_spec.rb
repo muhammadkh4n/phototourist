@@ -79,25 +79,19 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
       before(:each) { visit_thing linked_thing }
       it "can view linked images for thing" do
         expect(page).to have_css("sd-thing-editor")
-        within("sd-thing-editor .thing-form ul.thing-images",:wait=>5) do
-          expect(page).to have_css("li span.image_id", 
-                                   :text=>linked_image.id, 
-                                   :visible=>false,
-                                   :wait=>5)
-          expect(page).to have_css("li label.image-caption", 
-                                   :text=>linked_image.caption)
-          #no link should show that it has been modified
-          expect(page).to have_no_css("li div.glyphicon-asterisk")
-        end
+        expect(page).to have_css(".thing-image-viewer label", :text=>"Related Images")
+        expect(page).to have_css(".image-area img[src*='#{image_content_path(linked_image)}']",
+                                :visible=>false, :wait=>5)
       end
       it "can navigate from thing to image" do
         expect(page).to have_css("sd-thing-editor")
+        expect(page).to have_css(".image-area img[src*='#{image_content_path(linked_image)}']",
+                                :visible=>false, :wait=>5)
 
-        #wait for the link to show up and then click
-        within("sd-thing-editor .thing-form ul.thing-images") do
-          node=find("li span.image_id",:text=>linked_image.id,
-                                  :visible=>false,
-                                  :wait=>5).find(:xpath,"../label").click
+        #extend timeouts for an extensive amount of concurrent, async activity
+        using_wait_time 20 do
+          #wait for the link to show up and then click
+          page.find("span.image-browse[href*='images/#{linked_image.id}']",:visible=>false).click
         end
 
         #wait for page to react to link and switch away
@@ -224,9 +218,13 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         new_priority=thing_image.priority==0 ? thing_image.priority - 1 : 9;
         expect(old_priority=ThingImage.find(thing_image.id).priority).to_not eq(new_priority)
         expect(page).to have_button("Update Thing", :disabled=>true)
+        expect(page).to have_css("div.thing-images span.image_id",:text=>linked_image.id,
+                                 :visible=>false,:wait=>5)
 
         #find and change the priority
-        within(".thing-images ul li", :text=>displayed_caption(linked_image)) do
+        image_li=find("div.thing-images span.image_id",:text=>linked_image.id, 
+                      :visible=>false).find(:xpath,"../..")
+        within(image_li) do
           find_field("image-priority", :with=>old_priority, :readonly=>false)
           fill_in("image-priority", :with=>new_priority)
           find_field("image-priority", :with=>new_priority)
@@ -262,7 +260,9 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         find_field("thing-name",:with=>new_name)
         save_and_open_screenshot unless page.has_button?("Update Thing",:disabled=>false)
         expect(page).to have_button("Update Thing", :disabled=>false)
-        within(".thing-images ul li", :text=>displayed_caption(linked_image)) do
+        image_li=find("div.thing-images span.image_id",:text=>linked_image.id, 
+                      :visible=>false).find(:xpath,"../..")
+        within(image_li) do
           fill_in("image-priority", :with=>new_priority)
         end
         save_and_open_screenshot unless page.has_button?("Update Thing",:disabled=>false)
@@ -287,9 +287,13 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
       within("sd-thing-editor .thing-form") do
         expect(page).to have_button("Update Thing",:disabled=>true)
         expect(page).to have_no_button("Update Image Links")
+        expect(page).to have_css("div.thing-images span.image_id",:text=>linked_image.id,
+                                 :visible=>false,:wait=>5)
 
         #editing only a link causes only the link update to be enabled
-        within(".thing-images ul li", :text=>displayed_caption(linked_image)) do
+        image_li=find("div.thing-images span.image_id",:text=>linked_image.id, 
+                      :visible=>false).find(:xpath,"../..")
+        within(image_li) do
           fill_in("image-priority", :with=>thing_image.priority+1)
         end
         expect(page).to have_no_button("Update Thing")
@@ -327,7 +331,8 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         within(".thing-images ul li", :text=>displayed_caption(linked_image)) do
           find_field("image-delete").set(true)
         end
-        button = page.has_button?("Update Thing") ? "Update Thing" : "Update Image Links"
+        button = "Update Image Links"
+        expect(page).to have_button(button,:disabled=>false)
         click_button(button)
           # wait for page to refresh
         expect(page).to have_no_button(button)
