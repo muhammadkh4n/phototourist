@@ -6,6 +6,8 @@
 //= require angular-resource
 //= require angular-cookie
 //= require ng-token-auth
+//= require ng-file-upload-shim
+//= require ng-file-upload
 
 //= require spa/app.module
 //= require spa/app.router
@@ -27,6 +29,8 @@
 
 //= require spa/layout/layout.module
 //= require spa/layout/navbar/navbar.component
+//= require spa/layout/image_loader/data_utils.service
+//= require spa/layout/image_loader/image_loader.component
 
 //= require spa/states/states.module
 //= require spa/states/states.service

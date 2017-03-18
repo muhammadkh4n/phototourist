@@ -3,6 +3,7 @@
 
   angular.module("spa", [
 		"ui.router",
+		"ngFileUpload",
 		"spa.config",
 		"spa.authn",
 		"spa.authz",
