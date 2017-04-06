@@ -1,7 +1,8 @@
 class ThingImage < ActiveRecord::Base
   belongs_to :image
   belongs_to :thing
-
+  acts_as_mappable :through => :image
+  
   validates :image, :thing, presence: true
 
   scope :prioritized,  -> { order(:priority=>:asc) }
