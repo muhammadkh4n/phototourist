@@ -100,7 +100,7 @@ RSpec.feature "ImageViewer", type: :feature, js:true do
           within(".image-items") do
             #verify we advanced to the correct Image
             find("span.caption", visible:false).click
-            using_wait_time 5 do
+            using_wait_time 10 do
               expect(page).to have_css("span.caption", text:images[idx].image.caption)
             end
           end
