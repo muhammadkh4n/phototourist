@@ -8,6 +8,7 @@ class ThingImagesController < ApplicationController
   before_action :authenticate_user!, only: [:create, :update, :destroy]
   after_action :verify_authorized, except: [:subjects]
   #after_action :verify_policy_scoped, only: [:linkable_things]
+  before_action :origin, only: [:subjects]
  
   def index
     authorize @thing, :get_images?
@@ -113,7 +114,7 @@ class ThingImagesController < ApplicationController
       @origin=Point.new(params[:lng].to_f, params[:lat].to_f)
     else
       raise ActionController::ParameterMissing.new(
-              "an origin [lng/lat or address required")
+              "an origin [lng/lat] required")
     end
   end
 end
