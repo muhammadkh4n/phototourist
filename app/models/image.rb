@@ -7,6 +7,7 @@ class Image < ActiveRecord::Base
 
   composed_of :position,
               class_name: "Point",
+              allow_nil: true,
               mapping: [%w(lng lng), %w(lat lat)]
   
   def basename
