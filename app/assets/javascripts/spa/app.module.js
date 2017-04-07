@@ -8,6 +8,7 @@
 		"spa.config",
 		"spa.authn",
 		"spa.authz",
+		"spa.geoloc",
 		"spa.layout",
 		"spa.states",
 		"spa.subjects"
