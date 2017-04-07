@@ -30,6 +30,8 @@
 
 //= require spa/geoloc/geoloc.module
 //= require spa/geoloc/geocoder.service
+//= require spa/geoloc/current_origin/current_origin.service
+//= require spa/geoloc/current_origin/current_origin_selector.component
 
 //= require spa/layout/layout.module
 //= require spa/layout/image_query_size.service
