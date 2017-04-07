@@ -6,4 +6,5 @@ rake db:create RAILS_ENV=test
 rake db:migrate RAILS_ENV=test
 # bundle exec rspec spec/models --fail-fast
 # bundle exec rspec spec/requests --fail-fast
-bundle exec rspec spec/features --fail-fast
+bundle exec rspec --order random --fail-fast
+#tail -f Gemfile
