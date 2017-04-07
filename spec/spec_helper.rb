@@ -21,7 +21,7 @@ require_relative 'support/database_cleaners.rb'
 require_relative 'support/api_helper.rb'
 require_relative 'support/ui_helper.rb'
 
-browser=:chrome
+browser=:firefox
 Capybara.register_driver :selenium do |app|
   if ENV["SELENIUM_REMOTE_HOST"]
     docker_ip = %x(/sbin/ip route|awk '/default/ { print $3 }').strip
@@ -60,7 +60,7 @@ Capybara.configure do |config|
   #config.javascript_driver = :selenium
   config.javascript_driver = :webkit
 end
-Capybara.javascript_driver = :selenium
+#Capybara.javascript_driver = :selenium
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,
@@ -88,6 +88,13 @@ RSpec.configure do |config|
   config.include UiHelper, :type=>:feature
   #config.include_context "db_cleanup", :type => :model
 
+  config.before(:each, js: true) do
+    #Capybara.page.driver.browser.manage.window.maximize
+    if !ENV['SELENIUM_REMOTE_HOST'] || Capybara.javascript_driver = :poltergeist
+      Capybara.page.current_window.resize_to(1050, 800)
+    end
+  end
+  
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
