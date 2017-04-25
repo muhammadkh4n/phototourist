@@ -21,7 +21,7 @@ require_relative 'support/database_cleaners.rb'
 require_relative 'support/api_helper.rb'
 require_relative 'support/ui_helper.rb'
 
-browser=:firefox
+browser=:chrome
 Capybara.register_driver :selenium do |app|
   if ENV["SELENIUM_REMOTE_HOST"]
     docker_ip = %x(/sbin/ip route|awk '/default/ { print $3 }').strip
@@ -94,7 +94,7 @@ RSpec.configure do |config|
       Capybara.page.current_window.resize_to(1050, 800)
     end
   end
-  
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
