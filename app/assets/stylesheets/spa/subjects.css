@@ -1,4 +1,3 @@
-
 form.thing-form .id,
 div.thing-list .id,
 form.image-form .id,
@@ -10,4 +9,19 @@ sd-image-editor form,
 sd-thing-editor form {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+div.images-area {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+div.things-area {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/*********** subjects view ********/
+div.subjects-page {
+  padding-left: 0px;
+  padding-right: 0px;
 }
