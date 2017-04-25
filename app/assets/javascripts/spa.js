@@ -44,6 +44,8 @@
 
 //= require spa/layout/tabs/tabs.component
 
+//= require spa/layout/areas/areas.component
+
 //= require spa/states/states.module
 //= require spa/states/states.service
 //= require spa/states/states.controller
