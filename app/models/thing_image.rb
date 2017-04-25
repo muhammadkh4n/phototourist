@@ -2,7 +2,7 @@ class ThingImage < ActiveRecord::Base
   belongs_to :image
   belongs_to :thing
   acts_as_mappable :through => :image
-  
+
   validates :image, :thing, presence: true
 
   scope :prioritized,   -> { order(:priority=>:asc) }
@@ -24,7 +24,7 @@ class ThingImage < ActiveRecord::Base
   }
 
   def self.with_distance(origin, scope)
-    scope.select("-1 as distance").with_position
+    scope.select("-1.0 as distance").with_position
       .each {|ti| ti.distance = ti.distance_from(origin) }
   end
 
@@ -35,8 +35,8 @@ class ThingImage < ActiveRecord::Base
     m3=ThingImage.maximum(:updated_at)
     [m1,m2,m3].max
 =end
-    unions=[Thing,Image,ThingImage].map {|t| 
-      "select max(updated_at) as modified from #{t.table_name}\n" 
+    unions=[Thing,Image,ThingImage].map {|t|
+      "select max(updated_at) as modified from #{t.table_name}\n"
     }.join(" union\n")
     sql   ="select max(modified) as last_modified from (\n#{unions}) as x"
     value=connection.select_value(sql)
