@@ -42,6 +42,8 @@
 //= require spa/layout/image_loader/image_loader.component
 //= require spa/layout/image_viewer/image_viewer.component
 
+//= require spa/layout/tabs/tabs.component
+
 //= require spa/states/states.module
 //= require spa/states/states.service
 //= require spa/states/states.controller
