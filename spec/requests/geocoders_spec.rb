@@ -73,7 +73,9 @@ RSpec.describe "Geocoders", type: :request do
     let(:geocoder_cache)    { GeocoderCache.new(Geocoder.new) }
     before(:each) do
       expect(CachedLocation.by_address(search_address).count).to be <= 1
-      expect(CachedLocation.by_position(search_position).count).to be <= 1
+      #we can get multiple addresses at same geo
+      positions=CachedLocation.by_position(search_position).count
+      @expected_positions= positions==0 ? 1 : positions
     end
 
     context "service" do
@@ -88,11 +90,11 @@ RSpec.describe "Geocoders", type: :request do
       end
       it "caches location by position" do
         expect(result=geocoder_cache.reverse_geocode(search_position)).to_not be_nil
-        expect(CachedLocation.by_position(search_position).count).to eq(1)
+        expect(CachedLocation.by_position(search_position).count).to eq(@expected_positions)
 
         3.times do
           expect(geocoder_cache.reverse_geocode(search_position)[1].id).to eq(result[1].id)
-          expect(CachedLocation.by_position(search_position).count).to eq(1)
+          expect(CachedLocation.by_position(search_position).count).to eq(@expected_positions)
         end
       end
     end
@@ -105,7 +107,7 @@ RSpec.describe "Geocoders", type: :request do
         #pp parsed_body
 
         #with request header
-        3.times do 
+        3.times do
           etag = response.headers["ETag"]
           #pp "ETag=#{etag}"
           jget geocoder_addresses_path, {:address=>search_address}, {"If-None-Match"=>etag}
@@ -125,23 +127,23 @@ RSpec.describe "Geocoders", type: :request do
       it "caches location by position" do
         jget geocoder_positions_path, search_position.to_hash
         expect(response).to have_http_status(:ok)
-        expect(CachedLocation.by_position(search_position).count).to eq(1)
+        expect(CachedLocation.by_position(search_position).count).to eq(@expected_positions)
         #pp parsed_body
 
         #no request header
         3.times do
           jget geocoder_positions_path, search_position.to_hash
           expect(response).to have_http_status(:ok)
-          expect(CachedLocation.by_position(search_position).count).to eq(1)
+          expect(CachedLocation.by_position(search_position).count).to eq(@expected_positions)
         end
 
         #with request header
-        3.times do 
+        3.times do
           etag = response.headers["ETag"]
           #pp "ETag=#{etag}"
           jget geocoder_positions_path, search_position.to_hash, {"If-None-Match"=>etag}
           expect(response).to have_http_status(:not_modified)
-          expect(CachedLocation.by_position(search_position).count).to eq(1)
+          expect(CachedLocation.by_position(search_position).count).to eq(@expected_positions)
         end
       end
     end
@@ -191,7 +193,7 @@ RSpec.describe "Geocoders", type: :request do
     include_context "db_clean_all"
     before(:each) do
       unless Thing.exists?
-        10.times do 
+        10.times do
           thing=FactoryGirl.create(:thing)
           2.times do |idx|
             image=FactoryGirl.create(:image,image_content:nil)
@@ -200,7 +202,7 @@ RSpec.describe "Geocoders", type: :request do
         end
       end
       @origin=FactoryGirl.build(:point)
-      distances=ThingImage.with_distance(@origin, ThingImage.things).map {|ti| ti.distance } 
+      distances=ThingImage.with_distance(@origin, ThingImage.things).map {|ti| ti.distance }
       @distance=distances.reduce(:+) / distances.size.to_f
     end
 
@@ -245,7 +247,7 @@ RSpec.describe "Geocoders", type: :request do
         #pp parsed_body
         expect(response).to have_http_status(:ok)
         payload=parsed_body
-      
+
         expect(payload.size).to be >= images_without_things.size
         found=0
         payload.each do |ti|
