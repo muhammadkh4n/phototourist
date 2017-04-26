@@ -19,7 +19,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
                                                 :member_id=>member[:id]) }
   let(:alt_things)    { FactoryGirl.create_list(:thing, 1,
                                                 :with_roles,
-                                                :originator_id=>originator[:id],
+                                                :originator_ids=>originator[:id],
                                                 :member_id=>alt_member[:id]) }
   let(:images) { FactoryGirl.create_list(:image, 3,
                                          :with_roles,
