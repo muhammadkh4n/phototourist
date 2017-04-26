@@ -9,9 +9,9 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
 
   feature "view existing States" do
     let(:states) { (1..5).map { FactoryGirl.create(:state) }.sort_by {|v| v["name"]} }
-    
+
     scenario "when no instances exist" do
-      visit  "#{root_path}/#/"
+      visit  "#{root_path}/#/states"
       within(:xpath, STATE_LIST_XPATH) do
         expect(page).to have_no_css("li")
         expect(page).to have_css("li", count:0)
@@ -19,7 +19,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
       end
     end
     scenario "when instances exist" do
-      visit "#{root_path}/#/" if states
+      visit "#{root_path}/#/states" if states
       within(:xpath, STATE_LIST_XPATH) do
         expect(page).to have_css("li:nth-child(#{states.count})")
         expect(page).to have_css("li", count:states.count)
@@ -34,7 +34,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
   feature "add new State" do
     let(:state_attr) { FactoryGirl.attributes_for(:state) }
     background(:each) do
-      visit "#{root_path}/#/"
+      visit "#{root_path}/#/states"
       expect(page).to have_css("h3", text:"States")
       within(:xpath, STATE_FORM_XPATH) do
         expect(page).to have_css("li", count:0)
@@ -59,7 +59,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
 
     scenario "complete form with helper" do
       create_state state_attr
-      
+
       within(:xpath, STATE_LIST_XPATH) do
         expect(page).to have_css("li", count: 1)
       end
@@ -86,7 +86,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
     background(:each) do
       create_state(state_attr)
     end
-    
+
     scenario "can be updated" do
       existing_name=state_attr[:name]
       new_name=FactoryGirl.attributes_for(:state)[:name]
@@ -96,7 +96,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
         expect(page).to have_css("li", :text=>existing_name)
         expect(page).to have_no_css("li", :text=>new_name)
       end
-      
+
       update_state(existing_name, new_name)
 
       within(:xpath, STATE_LIST_XPATH) do
@@ -105,7 +105,7 @@ RSpec.feature "ManageStates", type: :feature, :js => true do
         expect(page).to have_css("li", :text=>new_name)
       end
     end
-    
+
     scenario "can be deleted" do
       within(:xpath, STATE_LIST_XPATH) do
         expect(page).to have_css("a",text: state_attr[:name])
