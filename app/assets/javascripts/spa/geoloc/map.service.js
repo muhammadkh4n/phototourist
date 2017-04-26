@@ -59,6 +59,7 @@
       var infoWindow=new google.maps.InfoWindow({content: markerOptions.content});
       var listener=marker.addListener('click', function(){
         service.setActiveMarker(markerOptions);
+        $timeout();
       });
 
       //remember the marker
