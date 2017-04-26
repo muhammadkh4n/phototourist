@@ -17,7 +17,7 @@
     function MyLocation() {
     }
 
-    provider.$get = ["$window", "$q", "spa.geoloc.geocoder",
+    provider.$get = ["$window", "$q", "spa.geoloc.geocoder", 
                      function($window, $q, geocoder) {
 
       //returns true/false whether current location provided
@@ -35,12 +35,11 @@
         if (!this.isCurrentLocationSupported()) {
           deferred.reject("geolocation not supported by browser");
         } else {
-          // $window.navigator.geolocation.getCurrentPosition(
-          //   function(position){ service.geocodeGeoposition(deferred, position); },
-          //   function(err){ deferred.reject(err); },
-          //   {timeout:10000}
-          //   );
-          this.geocodeGeoposition(deferred,provider.positionOverride);
+          $window.navigator.geolocation.getCurrentPosition(
+            function(position){ service.geocodeGeoposition(deferred, position); },
+            function(err){ deferred.reject(err); },
+            {timeout:10000}
+            );
         }
 
         return deferred.promise;
