@@ -25,9 +25,9 @@ RSpec.feature "ImageContents", type: :feature, js:true do
       @thing = Thing.first
       unless @thing
         @thing=FactoryGirl.create(:thing,
-                                  :with_roles, :with_image, 
+                                  :with_roles, :with_image,
                                   :originator_id=>organizer[:id],
-                                  :image_count=>3) 
+                                  :image_count=>3)
       else
         apply_organizer(organizer, @thing)
       end
@@ -35,7 +35,7 @@ RSpec.feature "ImageContents", type: :feature, js:true do
     end
 
     it "can display thumbnails in image list" do
-      visit_images 
+      visit_images
       within("sd-image-selector .image-list") do
         expect(page).to have_css("li", :count=>images.count)
         img=find(".image_id",:text=>image.id, :visible=>false).find(:xpath,"..")
@@ -58,7 +58,8 @@ RSpec.feature "ImageContents", type: :feature, js:true do
 
       #existing image is displayed with caption
       within("sd-image-editor .image-form") do
-        expect(page).to have_css("span.image_id",:text=>image.id,:visible=>false)
+        expect(page).to have_css("span.image_id",:text=>image.id,
+                                                 :visible=>false,:wait=>5)
         expect(page).to have_field("image-caption",:with=>image.caption)
         expect(page).to have_css(".image-existing img[src*='#{image_content_path(image,width:250)}']")
       end
@@ -78,7 +79,7 @@ RSpec.feature "ImageContents", type: :feature, js:true do
       end
     end
   end
-  
+
   context "upload content" do
     include_context "db_clean_after"
     before(:each) do
@@ -127,7 +128,7 @@ RSpec.feature "ImageContents", type: :feature, js:true do
       within("sd-image-editor .image-form") do
         attach_file("image-file", image_filepath )
         fill_in("image-caption", :with=>image_props[:caption])
-        if (page.has_css?("span.invalid",:text=>/.+/)) 
+        if (page.has_css?("span.invalid",:text=>/.+/))
           fail(page.find("span.invalid",:text=>/.+/).text)
         end
         using_wait_time 10 do

@@ -19,7 +19,7 @@ module UiHelper
   def signup registration, success=true
     fillin_signup registration
     expect(page).to have_button("Sign Up",:disabled=>false) if success
-    click_on("Sign Up")  
+    click_on("Sign Up")
     if success
       expect(page).to have_no_button("Sign Up", :wait=>5)
     else
@@ -69,7 +69,7 @@ module UiHelper
     if logged_in?
       name=page.find("#navbar-loginlabel",:text=>/.+/).text
       User.where(:name=>name).each do |u|
-        if page.has_css?("#user_id",:text=>u.id,:visible=>false,:wait=>5) 
+        if page.has_css?("#user_id",:text=>u.id,:visible=>false,:wait=>5)
           user=u
           break
         end
@@ -78,8 +78,8 @@ module UiHelper
     return user
   end
 
-  def wait_until
-    Timeout.timeout(Capybara.default_max_wait_time) do 
+  def wait_until timeout=Capybara.default_max_wait_time
+    Timeout.timeout(timeout) do
       sleep(0.1) until value = yield
       value
     end

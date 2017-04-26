@@ -53,7 +53,7 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
         fill_in("image-caption", :with=>image_props[:caption])
         expect(page).to have_field("image-caption",:with=>image_props[:caption])
         attach_file("image-file", image_filepath)
-        if (page.has_css?("span.invalid",:text=>/.+/)) 
+        if (page.has_css?("span.invalid",:text=>/.+/))
           fail(page.find("span.invalid",:text=>/.+/).text)
         end
         expect(page).to have_no_css("span.invalid",:text=>/.+/)
@@ -73,7 +73,7 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
         end
       end
       5.times { #getting to Clear Image above too fast -- image still loading
-        if (page.has_button?("Clear Image")) 
+        if (page.has_button?("Clear Image"))
           click_button("Clear Image")
           sleep 0.25
         else
@@ -108,7 +108,7 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
         #we start out with caption filled in and button(s) displayed
         expect(page).to have_field("image-caption", :with=>image.caption)
         expect(page).to have_no_field("image-caption", :with=>"")
-        
+
         #clear the selected image
         click_button("Clear Image")
 
@@ -140,7 +140,7 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
         expect(page).to have_field("image-caption", :with=>image.caption)
         expect(page).to have_css("div.image-existing img",:count=>1,:wait=>5)
         expect(page).to have_button("Update Image", :disabled=>true)
-        
+
         #update the input field
         fill_in("image-caption", :with=>new_caption)
         expect(page).to have_field("image-caption", :with=>new_caption)
@@ -171,10 +171,9 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
   end
   shared_examples "can delete image" do
     it "image deleted" do
+      #wait for page to load
+      image_editor_loaded! image
       within("sd-image-editor .image-form") do
-        #wait for page to load
-        expect(page).to have_css("div.image-existing img",:count=>1,:wait=>5)
-
         #delete the image
         click_button("Delete Image")
 
@@ -196,30 +195,30 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
 
     context "unauthenticated user" do
       before(:each) { logout; visit_images images }
-      it_behaves_like "can list images" 
-      it_behaves_like "displays correct buttons for role", 
-            [], 
+      it_behaves_like "can list images"
+      it_behaves_like "displays correct buttons for role",
+            [],
             ["Create Image", "Clear Image", "Update Image", "Delete Image"]
     end
     context "authenticated user" do
       before(:each) { login authenticated; visit_images images }
-      it_behaves_like "can list images" 
-      it_behaves_like "displays correct buttons for role", 
-            ["Create Image"], 
+      it_behaves_like "can list images"
+      it_behaves_like "displays correct buttons for role",
+            ["Create Image"],
             ["Clear Image", "Update Image", "Delete Image"]
       it_behaves_like "can create image"
     end
     context "organizer user" do
       before(:each) { login organizer; visit_images images }
-      it_behaves_like "displays correct buttons for role", 
-            ["Create Image"], 
+      it_behaves_like "displays correct buttons for role",
+            ["Create Image"],
             ["Clear Image", "Update Image", "Delete Image"]
       it_behaves_like "can create image"
     end
     context "admin user" do
       before(:each) { login admin; visit_images images }
-      it_behaves_like "displays correct buttons for role", 
-            ["Create Image"], 
+      it_behaves_like "displays correct buttons for role",
+            ["Create Image"],
             ["Clear Image", "Update Image", "Delete Image"]
       it_behaves_like "can create image"
     end
@@ -239,8 +238,8 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
 
       context "unauthenticated user" do
         before(:each) { logout; find(".image-controls",:wait=>5) }
-        it_behaves_like "displays correct buttons for role", 
-              ["Clear Image"], 
+        it_behaves_like "displays correct buttons for role",
+              ["Clear Image"],
               ["Create Image", "Update Image", "Delete Image"]
         it_behaves_like "can clear image"
         it_behaves_like "cannot update image"
@@ -255,7 +254,7 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
       end
       context "organizer user" do
         before(:each) { login organizer; find(".image-controls > span",:wait=>5) }
-        it_behaves_like "displays correct buttons for role", 
+        it_behaves_like "displays correct buttons for role",
               ["Clear Image", "Update Image", "Delete Image"],
               ["Create Image"]
         it_behaves_like "can clear image"
@@ -264,7 +263,7 @@ RSpec.feature "AuthzImages", type: :feature, js:true do
       end
       context "admin user" do
         before(:each) { login admin; find(".image-controls > span",:wait=>5) }
-        it_behaves_like "displays correct buttons for role", 
+        it_behaves_like "displays correct buttons for role",
               ["Clear Image", "Delete Image"],
               ["Create Image", "Update Image"]
         it_behaves_like "can clear image"

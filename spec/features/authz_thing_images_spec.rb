@@ -13,16 +13,16 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
   let(:authenticated) { create_user }
   let(:thing_props)   { FactoryGirl.attributes_for(:thing) }
   let(:things)        { FactoryGirl.create_list(:thing, 3) }
-  let(:things)        { FactoryGirl.create_list(:thing, 3, 
-                                                :with_roles, 
+  let(:things)        { FactoryGirl.create_list(:thing, 3,
+                                                :with_roles,
                                                 :originator_id=>originator[:id],
                                                 :member_id=>member[:id]) }
-  let(:alt_things)    { FactoryGirl.create_list(:thing, 1, 
-                                                :with_roles, 
+  let(:alt_things)    { FactoryGirl.create_list(:thing, 1,
+                                                :with_roles,
                                                 :originator_id=>originator[:id],
                                                 :member_id=>alt_member[:id]) }
-  let(:images) { FactoryGirl.create_list(:image, 3, 
-                                         :with_roles, 
+  let(:images) { FactoryGirl.create_list(:image, 3,
+                                         :with_roles,
                                          :creator_id=>authenticated[:id]) }
   let(:linked_thing)  { things[0] }
   let(:linked_image)  { images[0] }
@@ -34,13 +34,13 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
 
   before(:each) do
     #touch these before we start
-    thing_image   
+    thing_image
     alt_things
     visit ui_path
   end
 
   shared_examples "can get links" do
-    context "from images" do 
+    context "from images" do
       before(:each) { visit_image linked_image }
       it "can view linked things for image" do
         within("sd-image-editor") do
@@ -48,8 +48,8 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
           within("div.image-things") do
             expect(page).to have_css("label", :text=>"Related Things")
             expect(page).to have_css("li a", :text=>linked_thing.name)
-            expect(page).to have_css("li span.thing_id", 
-                                     :text=>linked_thing.id, 
+            expect(page).to have_css("li span.thing_id",
+                                     :text=>linked_thing.id,
                                      :visible=>false)
             expect(page).to have_no_css("li span.thing_id") #should be hidden
           end
@@ -138,7 +138,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         #was added to linked things
         expect(page).to have_css("ul.image-things li a", :text=>linked_thing.name)
         expect(page).to have_css("ul.image-things li a", :text=>things[1].name)
-        expect(page).to have_css("ul.image-things li span.thing_id", 
+        expect(page).to have_css("ul.image-things li span.thing_id",
                                  :text=>things[1].id, :visible=>false)
       end
     end
@@ -161,7 +161,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         expect(page).to have_no_css(".link-things select option", :text=>things[1].name)
 
         #wait for async server updated to complete
-        expect(page).to have_css("ul.image-things li span.thing_id", 
+        expect(page).to have_css("ul.image-things li span.thing_id",
                                  :text=>things[1].id, :visible=>false, :wait=>5)
       end
       #try to wait for all requests to server to complete before exiting
@@ -184,7 +184,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         expect(page).to have_button(button,:disabled=>true,:wait=>5)
 
         #wait for page to update
-        expect(page).to have_css("ul.image-things li span.thing_id", 
+        expect(page).to have_css("ul.image-things li span.thing_id",
                                  :text=>things[1].id, :visible=>false, :wait=>5)
       end
     end
@@ -222,7 +222,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
                                  :visible=>false,:wait=>5)
 
         #find and change the priority
-        image_li=find("div.thing-images span.image_id",:text=>linked_image.id, 
+        image_li=find("div.thing-images span.image_id",:text=>linked_image.id,
                       :visible=>false).find(:xpath,"../..")
         within(image_li) do
           find_field("image-priority", :with=>old_priority, :readonly=>false)
@@ -260,7 +260,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         find_field("thing-name",:with=>new_name)
         save_and_open_screenshot unless page.has_button?("Update Thing",:disabled=>false)
         expect(page).to have_button("Update Thing", :disabled=>false)
-        image_li=find("div.thing-images span.image_id",:text=>linked_image.id, 
+        image_li=find("div.thing-images span.image_id",:text=>linked_image.id,
                       :visible=>false).find(:xpath,"../..")
         within(image_li) do
           fill_in("image-priority", :with=>new_priority)
@@ -291,12 +291,12 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
                                  :visible=>false,:wait=>5)
 
         #editing only a link causes only the link update to be enabled
-        image_li=find("div.thing-images span.image_id",:text=>linked_image.id, 
+        image_li=find("div.thing-images span.image_id",:text=>linked_image.id,
                       :visible=>false).find(:xpath,"../..")
         within(image_li) do
           fill_in("image-priority", :with=>thing_image.priority+1)
         end
-        expect(page).to have_no_button("Update Thing")
+        expect(page).to have_no_button("Update Thing", :wait=>5)
         expect(page).to have_button("Update Image Links", :disabled=>false)
 
         #editing name causes entire object update to be enabled

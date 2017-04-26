@@ -3,20 +3,20 @@ require 'rails_helper'
 RSpec.feature "Authns", type: :feature, :js=>true do
   include_context "db_cleanup_each"
   let(:user_props) { FactoryGirl.attributes_for(:user) }
-  
+
   feature "sign-up" do
     context "valid registration" do
       scenario "creates account and navigates away from signup page" do
         start_time=Time.now
-        
         signup user_props
-        
+
         #check we re-directed to home page
         expect(page).to have_no_css("#signup-form")
         #check the DB for the existance of the User account
         user=User.where(:email=>user_props[:email]).first
         #make sure we were the ones that created it
         expect(user.created_at).to be > start_time
+        sleep 0.5 #give time for async requests to finish on server
       end
     end
 
@@ -37,8 +37,9 @@ RSpec.feature "Authns", type: :feature, :js=>true do
         expect(page).to have_css("#signup-form")
         expect(page).to have_button("Sign Up")
       end
+
       scenario "displays error messages" do
-        bad_props=FactoryGirl.attributes_for(:user, 
+        bad_props=FactoryGirl.attributes_for(:user,
                                    :email=>user_props[:email],
                                    :password=>"123")
                             .merge(:password_confirmation=>"abc")
@@ -59,7 +60,7 @@ RSpec.feature "Authns", type: :feature, :js=>true do
       end
 
       scenario "clears error messages on page update" do
-        bad_props=FactoryGirl.attributes_for(:user, 
+        bad_props=FactoryGirl.attributes_for(:user,
                                    :email=>user_props[:email],
                                    :password=>"123")
                             .merge(:password_confirmation=>"abc")
@@ -85,13 +86,12 @@ RSpec.feature "Authns", type: :feature, :js=>true do
 
       scenario "bad email" do
         fillin_signup FactoryGirl.attributes_for(:user, :email=>"yadayadayada")
-        expect(page).to have_css("input[name='signup-email'].ng-invalid-email")          
+        expect(page).to have_css("input[name='signup-email'].ng-invalid-email")
       end
-      
       scenario "missing password" do
         fillin_signup FactoryGirl.attributes_for(:user, :password=>nil)
         expect(page).to have_css("input[name='signup-password'].ng-invalid-required")
-        expect(page).to have_css("input[name='signup-password_confirmation'].ng-invalid-required")          
+        expect(page).to have_css("input[name='signup-password_confirmation'].ng-invalid-required")
       end
     end
   end
@@ -117,13 +117,14 @@ RSpec.feature "Authns", type: :feature, :js=>true do
       signup user_props
       login user_props
     end
-    
+
     context "valid user login" do
       scenario "closes form and displays current user name" do
         expect(page).to have_css("#navbar-loginlabel",:text=>/#{user_props[:name]}/)
         expect(page).to have_no_css("#login-form")
         expect(page).to have_no_css("#logout-form") #dropdown goes away
       end
+
       scenario "menu shows logout option with identity" do
         find("#navbar-loginlabel").click
         expect(page).to have_css("#user_id",:text=>/.+/, :visible=>false)
@@ -132,7 +133,7 @@ RSpec.feature "Authns", type: :feature, :js=>true do
           expect(page).to have_button("Logout")
         end
       end
-      
+
       scenario "can access authenticated resources" do
         checkme
         within ("div.checkme-user") do
@@ -160,7 +161,6 @@ RSpec.feature "Authns", type: :feature, :js=>true do
         end
         expect(page).to have_css("#navbar-loginlabel",:text=>"Login")
       end
-
     end
   end
 
@@ -185,13 +185,13 @@ RSpec.feature "Authns", type: :feature, :js=>true do
       expect(page).to have_no_css(*user_name_criteria)
       expect(page).to have_css(*login_criteria)
     end
-    
+
     scenario "can no longer access authenticated resources" do
       logout
       checkme
       within ("div.checkme-user") do
         expect(page).to have_no_css("label", :text=>/#{user_props[:name]}/)
-        expect(page).to have_css("label", :text=>/Authorized users only/, :wait=>5)
+        expect(page).to have_css("label", :text=>/Authorized users only/,:wait=>5)
       end
     end
   end

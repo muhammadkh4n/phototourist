@@ -23,7 +23,7 @@ RSpec.feature "Geocodes", type: :feature, js: true do
       within("sd-image-editor .image-form .image-geocode") do
         fill_in("image-address", with:typed_text)
         expect(page).to have_field("image-address",:with=>typed_text)
-      end    
+      end
 
       find("sd-image-editor").click  #click away from field
       using_wait_time 10 do
@@ -40,7 +40,7 @@ RSpec.feature "Geocodes", type: :feature, js: true do
     end
 
     it "assigns image location" do
-      image=FactoryGirl.create(:image, :with_roles, 
+      image=FactoryGirl.create(:image, :with_roles,
                                        :creator_id=>user[:id],
                                        :position=>nil)
       login user
@@ -52,7 +52,7 @@ RSpec.feature "Geocodes", type: :feature, js: true do
       typed_text="#{address.street_address}, #{address.city}"
       within(".image-geocode") do
         fill_in("image-address", with:typed_text)
-      end    
+      end
       find("sd-image-editor").click   #find somewhere to click
       using_wait_time 10 do
         expect(page).to have_css(".image-location span.lng", text:/.+/)
@@ -66,8 +66,12 @@ RSpec.feature "Geocodes", type: :feature, js: true do
       Capybara.reset_sessions!  #cleared up error re-visiting page in docker
       visit_image image
       expect(cloc=CachedLocation.by_address(typed_text).first).to_not be_nil
-      expect(page).to have_css(".image-location span.lng",:text=>cloc.location[:position][:lng])
-      expect(page).to have_css(".image-location span.lat",:text=>cloc.location[:position][:lat])
+      using_wait_time 5 do
+        expect(page).to have_css(".image-location span.lng",
+                                 :text=>cloc.location[:position][:lng])
+        expect(page).to have_css(".image-location span.lat",
+                                 :text=>cloc.location[:position][:lat])
+      end
     end
   end
 
@@ -114,7 +118,7 @@ RSpec.feature "Geocodes", type: :feature, js: true do
 
       fill_in("address-search", :with=>search_address)
       click_button("lookup-address")
-      using_wait_time 5 do
+      using_wait_time 10 do
         expect(page).to have_css("span.current-origin", :text=>/.+/)
       end
 
