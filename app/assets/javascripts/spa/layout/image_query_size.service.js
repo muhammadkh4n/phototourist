@@ -18,18 +18,19 @@
 		ImageQuerySize.prototype.updateSizes = function(minWidth) {
       var w = this.queryWidth(this.element.innerWidth());
       var h = this.queryHeight(this.element.innerHeight());
+      if (minWidth && w < minWidth) { w = minWidth; }
       var newSize = (w != this.width) || (h != this.height);
       if (newSize) {
         this.width=w;
-        this.height=h;        
+        this.height=h;
       }
       return newSize;
     };
-		
+
     ImageQuerySize.prototype.listen = function(handler) {
       angular.element($window).on('resize', handler);
     };
-		
+
     ImageQuerySize.prototype.nolisten = function(handler) {
       angular.element($window).off('resize', handler);
     };
@@ -70,7 +71,7 @@
         queryHeight = 533
       }
       return queryHeight;
-    } 
+    }
 
     /////
     return ImageQuerySize;
